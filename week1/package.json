@@ -8,6 +8,7 @@
     "lint": "npx eslint .",
     "dev": "nodemon -r dotenv/config ./bin/www"
   },
+  
   "jest": {
     "testEnvironment": "node",
     "preset": "@shelf/jest-mongodb",
