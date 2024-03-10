@@ -39,3 +39,14 @@ jobs:
       - name: Run tests
         run: npm test
         working-directory: ./week1
+
+
+      - name: Check coverage threshold
+        run: |
+          coverage=$(cat ./week1/coverage/coverage-summary.json | jq '.total.lines.pct')
+          threshold=20 
+          if (( $(echo "$coverage < $threshold" | bc -l) )); then
+            echo "Error: Test coverage is below threshold ($coverage%)"
+            exit 1
+          fi
+
