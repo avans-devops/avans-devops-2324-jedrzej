@@ -22,6 +22,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        working-directory: ./week1
     - name: Install dependencies, build, and test
       run: |
         cd week1
