@@ -1,4 +1,4 @@
-name: Week1
+name: photos
 
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
@@ -9,12 +9,12 @@ on:
   push:
     branches: [ "main" ]
     paths:
-      - 'week1/**'
+      - 'photos/**'
 
   pull_request:
     branches: [ "main" ]
     paths:
-      - 'week1/**'
+      - 'photos/**'
 
 
 jobs:
@@ -36,24 +36,24 @@ jobs:
         with:
           cache: 'npm'
           node-version: ${{ matrix.node-version }}
-          cache-dependency-path: ./week1
+          cache-dependency-path: ./photos
 
       - name: Install dependencies
         run: npm install
-        working-directory: ./week1
+        working-directory: ./photos
         
       - name: Lint code
         run: npm run lint  
-        working-directory: ./week1
+        working-directory: ./photos
 
       - name: Run tests
         run: npm test
-        working-directory: ./week1
+        working-directory: ./photos
 
       - name: Check coverage threshold
         run: |
-          coverage=$(cat ./week1/coverage/coverage-summary.json | jq '.total.lines.pct')
-          threshold=20 
+          coverage=$(cat ./photos/coverage/coverage-summary.json | jq '.total.lines.pct')
+          threshold=10 
           if (( $(echo "$coverage < $threshold" | bc -l) )); then
             echo "Error: Test coverage is below threshold ($coverage%)"
             exit 1

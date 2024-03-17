@@ -4,12 +4,57 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+const amqp = require('amqplib');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+const { ObjectId } = require('mongodb');
 
+
+const { db } = require("./services/database");
 var app = express();
 
-// view engine setup
+const QUEUE_NAME = process.env.MQ_QUE;
+
+async function consumeMessages() {
+    try {
+        const connection = await amqp.connect(process.env.MQ);
+        const channel = await connection.createChannel();
+        await channel.assertQueue(QUEUE_NAME, { durable: false });
+
+        console.log(`[*] Waiting for messages in ${QUEUE_NAME}. To exit press CTRL+C`);
+        channel.consume(QUEUE_NAME, async function(msg) {
+            const userId = msg.content.toString();
+            console.log(`[x] Received userId: ${userId}`);
+            const userExists = await checkUserExists(userId);
+
+            if (userExists) {
+                await db.collection('users_with_photos').insertOne({ userId });
+                console.log(`[+] Inserted data for userId: ${userId}`);
+            }
+
+            channel.ack(msg);
+        }, { noAck: false });
+    } catch (error) {
+        console.error('Error:', error); 
+    }
+}
+
+
+async function checkUserExists(userId) {
+    try {
+
+
+        const user = await db.collection('users').findOne({ _id: new ObjectId(userId) });
+
+        return !!user;
+    } catch (error) {
+        console.error('Error checking user existence:', error);
+        return false; 
+    }
+}
+
+consumeMessages();
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
