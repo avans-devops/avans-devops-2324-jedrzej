@@ -41,12 +41,14 @@ jobs:
       - name: Install dependencies
         run: npm install
         working-directory: ./week1
-
+        
+      - name: Lint code
+        run: npm run lint  
+        working-directory: ./week1
 
       - name: Run tests
         run: npm test
         working-directory: ./week1
-
 
       - name: Check coverage threshold
         run: |
