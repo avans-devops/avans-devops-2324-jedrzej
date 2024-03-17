@@ -1,0 +1,59 @@
+version: '3'
+
+services:
+  rb:
+    image: rabbitmq:latest
+    container_name: rmq 
+    ports:
+      - "5672:5672"  
+      - "15672:15672"
+    depends_on:
+      - express-photos
+  mongodb:
+    image: mongo:latest
+    container_name: week1_mongodb_api
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db1
+
+  express:
+    build:
+      context: ./week1
+      dockerfile: Dockerfile
+    container_name: week1_express
+    environment:
+      MONGO_URL: "mongodb://mongodb:27017"
+      DB_NAME: "mydb"
+      MQ: "amqp://rb"
+      MQ_QUE: "q"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+        
+  mongodb-photos:
+    image: mongo:latest
+    container_name: mongodb_api_photos
+    volumes:
+      - mongodb_data:/data/db2
+    ports:
+      - "27017:27017"
+
+  express-photos:
+    build:
+      context: ./photos
+      dockerfile: Dockerfile
+    container_name: photos_express
+    environment:
+      MONGO_URL_PHOTO: "mongodb://mongodb-photos:27017"
+      DB_NAME_PHOTO: "mydb"
+      MQ: "amqp://rb"
+      MQ_QUE: "q"
+    ports:
+      - "3001:3001"
+    depends_on:
+      - mongodb-photos
+volumes:
+  mongodb_data:
+
