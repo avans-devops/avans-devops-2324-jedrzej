@@ -10,7 +10,6 @@ var usersRouter = require('./routes/users');
 var usersWithPhotosRouter = require('./routes/users-with-photos');
 const { ObjectId } = require('mongodb');
 
-
 const { db } = require("./services/database");
 var app = express();
 
