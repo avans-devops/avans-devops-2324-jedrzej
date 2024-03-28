@@ -7,6 +7,7 @@ var logger = require('morgan');
 const amqp = require('amqplib');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var usersWithPhotosRouter = require('./routes/users-with-photos');
 const { ObjectId } = require('mongodb');
 
 
@@ -42,8 +43,6 @@ async function consumeMessages() {
 
 async function checkUserExists(userId) {
     try {
-
-
         const user = await db.collection('users').findOne({ _id: new ObjectId(userId) });
 
         return !!user;
@@ -66,6 +65,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/users-with-photos', usersWithPhotosRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
