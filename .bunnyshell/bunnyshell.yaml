@@ -1,0 +1,94 @@
+kind: Environment
+name: preview
+type: primary
+urlHandle: 4sf4ad
+components:
+    -
+        kind: Application
+        name: express
+        gitRepo: 'https://github.com/SpaceCadet5100/avans-devops-2324-jedrzej.git'
+        gitBranch: main
+        gitApplicationPath: week1
+        dockerCompose:
+            build:
+                context: ./week1
+                dockerfile: Dockerfile
+            environment:
+                DB_NAME: mydb
+                MONGO_URL: 'mongodb://mongodb:27017'
+                MQ: 'amqp://rb'
+                MQ_QUE: q
+            ports:
+                - '3000:3000'
+        hosts:
+            -
+                hostname: 'express-{{ env.base_domain }}'
+                path: /
+                servicePort: 3000
+    -
+        kind: Application
+        name: express-photos
+        gitRepo: 'https://github.com/SpaceCadet5100/avans-devops-2324-jedrzej.git'
+        gitBranch: main
+        gitApplicationPath: photos
+        dockerCompose:
+            build:
+                context: ./photos
+                dockerfile: Dockerfile
+            environment:
+                DB_NAME_PHOTO: mydb
+                MONGO_URL_PHOTO: 'mongodb://mongodb-photos:27018'
+                MQ: 'amqp://rb'
+                MQ_QUE: q
+            ports:
+                - '3002:3002'
+        hosts:
+            -
+                hostname: 'express-photos-{{ env.base_domain }}'
+                path: /
+                servicePort: 3002
+    -
+        kind: Database
+        name: mongodb
+        dockerCompose:
+            image: 'mongo:latest'
+            ports:
+                - '27017:27017'
+        volumes:
+            -
+                name: mongodb-data
+                mount: /data/db1
+                subPath: ''
+    -
+        kind: Database
+        name: mongodb-photos
+        dockerCompose:
+            image: 'mongo:latest'
+            ports:
+                - '27018:27017'
+        volumes:
+            -
+                name: mongodb-data
+                mount: /data/db2
+                subPath: ''
+    -
+        kind: Service
+        name: rb
+        dockerCompose:
+            image: 'rabbitmq:latest'
+            ports:
+                - '5672:5672'
+                - '15672:15672'
+                - '15671:15671'
+                - '25672:25672'
+                - '4369:4369'
+        hosts:
+            -
+                hostname: 'rb-{{ env.base_domain }}'
+                path: /
+                servicePort: 5672
+volumes:
+    -
+        name: mongodb-data
+        size: 1Gi
+        type: network
