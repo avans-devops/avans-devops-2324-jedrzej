@@ -48,7 +48,7 @@ services:
       dockerfile: Dockerfile
     container_name: photos_express
     environment:
-      MONGO_URL_PHOTO: "mongodb://mongodb-photos:27017"
+      MONGO_URL_PHOTO: "mongodb://mongodb-photos:27018"
       DB_NAME_PHOTO: "mydb"
       MQ: "amqp://rb"
       MQ_QUE: "q"
