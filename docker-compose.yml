@@ -60,7 +60,6 @@ services:
     image: prom/prometheus:latest
     volumes:
       - ./prometheus:/etc/prometheus
-      - prometheus-data:/prometheus
     ports:
       - 9090:9090
     command: --web.enable-lifecycle --config.file=/etc/prometheus/prometheus.yml
@@ -86,5 +85,3 @@ services:
 
 volumes:
   mongodb_data:
-  prometheus-data:
-
