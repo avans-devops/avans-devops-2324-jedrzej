@@ -9,19 +9,14 @@ describe('Get Photos', () => {
 
   });
 
- 
-
   afterAll(async() => {
     client.close();
   });
-
- 
 
   it('should get all photos in array', async () => {
     const expected = { 'foo': 'bar' };
     await db.collection('photos').insertOne(expected);
     delete expected._id;
-
  
     const res = await request(app).get('/photos')
     expect(res.statusCode).toEqual(200)
