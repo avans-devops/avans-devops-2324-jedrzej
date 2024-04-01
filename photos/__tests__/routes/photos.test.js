@@ -3,9 +3,9 @@ const app = require('../../app')
 const { db, client } = require('../../services/database');
  
 
-describe('Get Users', () => {
+describe('Get Photos', () => {
   beforeEach(async () => {
-    await db.collection('users').deleteMany({});
+    await db.collection('photos').deleteMany({});
 
   });
 
@@ -17,13 +17,13 @@ describe('Get Users', () => {
 
  
 
-  it('should get all users in array', async () => {
+  it('should get all photos in array', async () => {
     const expected = { 'foo': 'bar' };
-    await db.collection('users').insertOne(expected);
+    await db.collection('photos').insertOne(expected);
     delete expected._id;
 
  
-    const res = await request(app).get('/users')
+    const res = await request(app).get('/photos')
     expect(res.statusCode).toEqual(200)
     expect(res.body.length).toEqual(1);
     expect(res.body[0]).toEqual(expect.objectContaining(expected));
