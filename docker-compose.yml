@@ -56,13 +56,13 @@ services:
       - "3002:3002"
     depends_on:
       - mongodb-photos
+
   prometheus:
-    image: prom/prometheus:latest
-    volumes:
-      - ./prometheus:/etc/prometheus
+    build:
+      context: ./prometheus
+      dockerfile: Dockerfile
     ports:
       - 9090:9090
-    command: --web.enable-lifecycle --config.file=/etc/prometheus/prometheus.yml
 
   grafana:
     build: ./graphana
