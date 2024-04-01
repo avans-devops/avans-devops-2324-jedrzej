@@ -74,14 +74,14 @@ services:
     environment:
       - MONGODB_URI=mongodb://mongodb:27017/mydb
     ports:
-      - "4002:9216"
+      - "4004:9216"
 
   mongodb-exporter-express-photos:
     image: bitnami/mongodb-exporter:latest
     environment:
       - MONGODB_URI=mongodb://mongodb-photos:27017/mydb
     ports:
-      - "4003:9216"
+      - "4005:9216"
 
 volumes:
   mongodb_data:
