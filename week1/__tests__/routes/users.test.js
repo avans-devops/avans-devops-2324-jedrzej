@@ -8,14 +8,9 @@ describe('Get Users', () => {
     await db.collection('users').deleteMany({});
 
   });
-
- 
-
   afterAll(async() => {
     client.close();
   });
-
- 
 
   it('should get all users in array', async () => {
     const expected = { 'foo': 'bar' };
