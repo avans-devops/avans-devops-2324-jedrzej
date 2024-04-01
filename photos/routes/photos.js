@@ -38,19 +38,18 @@ router.get('/', async function(req, res) {
 
 async function sendMessage(userId) {
     try {
-	    
-        const connection = await amqp.connect(process.env.MQ);
-        const channel = await connection.createChannel();
+	const connection = await amqp.connect(process.env.MQ);
+	const channel = await connection.createChannel();
 
-        const queueName = process.env.MQ_QUE;
-        await channel.assertQueue(queueName, { durable: false });
-        channel.sendToQueue(queueName, Buffer.from(userId.toString()));
+	const queueName = process.env.MQ_QUE;
+	await channel.assertQueue(queueName, { durable: false });
+	channel.sendToQueue(queueName, Buffer.from(userId.toString()));
 
-        console.log(`[x] Sent userId: ${userId}`);
+	console.log(`[x] Sent userId: ${userId}`);
 
-        // Close connection
-        setTimeout(() => {
-            connection.close();
+	// Close connection
+	setTimeout(() => {
+    connection.close();
         }, 500);
     } catch (error) {
         console.error('Error:', error);

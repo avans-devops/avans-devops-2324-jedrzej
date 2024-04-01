@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 const amqp = require('amqplib');
+const promBundle = require("express-prom-bundle");
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var usersWithPhotosRouter = require('./routes/users-with-photos');
@@ -12,6 +13,15 @@ const { ObjectId } = require('mongodb');
 
 const { db } = require("./services/database");
 var app = express();
+
+const metricsMiddleware = promBundle({
+	includePath: true,
+	includeStatusCode: true,
+	normalizePath: true,
+	promClient: {
+		collectDefaultMetrics: {}
+	}
+});
 
 const QUEUE_NAME = process.env.MQ_QUE;
 
@@ -62,6 +72,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(metricsMiddleware);
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/users-with-photos', usersWithPhotosRouter);
