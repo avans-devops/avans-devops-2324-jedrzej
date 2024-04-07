@@ -1,7 +1,7 @@
 kind: Environment
-name: preview
+name: prod
 type: primary
-urlHandle: 4sf4ad
+urlHandle: jwo2yv
 components:
     -
         kind: Application
@@ -36,8 +36,8 @@ components:
                 context: ./photos
                 dockerfile: Dockerfile
             environment:
-                DB_NAME_PHOTO: mydb
-                MONGO_URL_PHOTO: 'mongodb://mongodb-photos:27018'
+                DB_NAME: mydb
+                MONGO_URL: 'mongodb://mongodb-photos:27018'
                 MQ: 'amqp://rb'
                 MQ_QUE: q
             ports:
@@ -47,6 +47,23 @@ components:
                 hostname: 'express-photos-{{ env.base_domain }}'
                 path: /
                 servicePort: 3002
+    -
+        kind: Application
+        name: grafana
+        gitRepo: 'https://github.com/SpaceCadet5100/avans-devops-2324-jedrzej.git'
+        gitBranch: main
+        gitApplicationPath: graphana
+        dockerCompose:
+            build:
+                context: ./graphana
+                dockerfile: Dockerfile
+            ports:
+                - '3003:3000'
+        hosts:
+            -
+                hostname: 'grafana-{{ env.base_domain }}'
+                path: /
+                servicePort: 3003
     -
         kind: Database
         name: mongodb
@@ -61,6 +78,24 @@ components:
                 subPath: ''
     -
         kind: Database
+        name: mongodb-exporter
+        dockerCompose:
+            environment:
+                MONGODB_URI: 'mongodb://mongodb:27017/mydb'
+            image: 'bitnami/mongodb-exporter:latest'
+            ports:
+                - '4004:9216'
+    -
+        kind: Database
+        name: mongodb-exporter-express-photos
+        dockerCompose:
+            environment:
+                MONGODB_URI: 'mongodb://mongodb-photos:27018/mydb'
+            image: 'bitnami/mongodb-exporter:latest'
+            ports:
+                - '4005:9216'
+    -
+        kind: Database
         name: mongodb-photos
         dockerCompose:
             image: 'mongo:latest'
@@ -71,6 +106,23 @@ components:
                 name: mongodb-data
                 mount: /data/db2
                 subPath: ''
+    -
+        kind: Application
+        name: prometheus
+        gitRepo: 'https://github.com/SpaceCadet5100/avans-devops-2324-jedrzej.git'
+        gitBranch: main
+        gitApplicationPath: prometheus
+        dockerCompose:
+            build:
+                context: ./prometheus
+                dockerfile: Dockerfile
+            ports:
+                - '9090:9090'
+        hosts:
+            -
+                hostname: 'prometheus-{{ env.base_domain }}'
+                path: /
+                servicePort: 9090
     -
         kind: Service
         name: rb
