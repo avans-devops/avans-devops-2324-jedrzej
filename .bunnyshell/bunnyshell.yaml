@@ -61,24 +61,6 @@ components:
                 subPath: ''
     -
         kind: Database
-        name: mongodb-exporter
-        dockerCompose:
-            environment:
-                MONGODB_URI: 'mongodb://mongodb:27017/mydb'
-            image: 'bitnami/mongodb-exporter:latest'
-            ports:
-                - '4004:9216'
-    -
-        kind: Database
-        name: mongodb-exporter-express-photos
-        dockerCompose:
-            environment:
-                MONGODB_URI: 'mongodb://mongodb-photos:27018/mydb'
-            image: 'bitnami/mongodb-exporter:latest'
-            ports:
-                - '4005:9216'
-    -
-        kind: Database
         name: mongodb-photos
         dockerCompose:
             image: 'mongo:latest'
