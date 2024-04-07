@@ -1,6 +1,6 @@
 
 
-### Photos Service
+### Photos Service, alias express-photos
 
 ### GET '/photos'
 
@@ -11,7 +11,7 @@ Deze route haalt alle foto's op uit de database en retourneert deze als een JSON
 Deze route maakt een nieuwe foto aan in de database. Het vereist een JSON-payload met de volgende velden: 'image' (de afbeelding zelf) en 'userId' (de gebruikers-ID van de eigenaar van de foto). Als een van deze velden ontbreekt, retourneert de route een 400-fout. Nadat de foto is toegevoegd aan de database, wordt er ook een bericht verzonden naar een message queue met de gebruikers-ID van de eigenaar van de foto.
 
 
-### Users Service
+### Users Service, alias express
 
 #### GET '/users'
 
