@@ -48,23 +48,6 @@ components:
                 path: /
                 servicePort: 3002
     -
-        kind: Application
-        name: grafana
-        gitRepo: 'https://github.com/SpaceCadet5100/avans-devops-2324-jedrzej.git'
-        gitBranch: main
-        gitApplicationPath: graphana
-        dockerCompose:
-            build:
-                context: ./graphana
-                dockerfile: Dockerfile
-            ports:
-                - '3003:3000'
-        hosts:
-            -
-                hostname: 'grafana-{{ env.base_domain }}'
-                path: /
-                servicePort: 3003
-    -
         kind: Database
         name: mongodb
         dockerCompose:
@@ -106,23 +89,6 @@ components:
                 name: mongodb-data
                 mount: /data/db2
                 subPath: ''
-    -
-        kind: Application
-        name: prometheus
-        gitRepo: 'https://github.com/SpaceCadet5100/avans-devops-2324-jedrzej.git'
-        gitBranch: main
-        gitApplicationPath: prometheus
-        dockerCompose:
-            build:
-                context: ./prometheus
-                dockerfile: Dockerfile
-            ports:
-                - '9090:9090'
-        hosts:
-            -
-                hostname: 'prometheus-{{ env.base_domain }}'
-                path: /
-                servicePort: 9090
     -
         kind: Service
         name: rb
