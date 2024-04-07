@@ -23,6 +23,7 @@ const metricsMiddleware = promBundle({
 	}
 });
 
+
 const QUEUE_NAME = process.env.MQ_QUE;
 
 async function consumeMessages() {
