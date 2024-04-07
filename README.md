@@ -21,11 +21,9 @@ Deze route haalt alle gebruikers op uit de database en retourneert ze als een JS
 
 Deze route voegt een nieuwe gebruiker toe aan de database. Het verwacht een JSON-payload met de gegevens van de nieuwe gebruiker en voegt deze toe aan de 'users'-collectie in de database.
 
-### Users With Photos Service
-
 #### GET '/users-with-photos'
 
-Deze route haalt alle gebruikers op die foto's hebben uit de database en retourneert ze als een JSON-array. Dit lijkt een verzameling te zijn van gebruikers die een foto hebben toegevoegd, mogelijk om het snel op te halen voor weergavedoeleinden.
+Deze route haalt alle gebruikers op die foto's hebben uit de database en retourneert ze als een JSON-array.
 
 Unit tests, lint, test coverage: 
 [![Week1](https://github.com/SpaceCadet5100/avans-devops-2324-jedrzej/actions/workflows/week1.js.yml/badge.svg?branch=main)](https://github.com/SpaceCadet5100/avans-devops-2324-jedrzej/actions/workflows/week1.js.yml)
