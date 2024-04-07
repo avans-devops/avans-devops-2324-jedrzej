@@ -5,8 +5,11 @@ services:
     image: rabbitmq:latest
     container_name: rmq 
     ports:
-      - "5672:5672"  
+      - "5672:5672"
       - "15672:15672"
+      - "15671:15671"
+      - "25672:25672"
+      - "4369:4369"
     depends_on:
       - express-photos
   mongodb:
@@ -53,6 +56,35 @@ services:
       - "3002:3002"
     depends_on:
       - mongodb-photos
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus-data:/prometheus
+    ports:
+      - 9090:9090
+    command: --web.enable-lifecycle --config.file=/etc/prometheus/prometheus.yml
+
+  grafana:
+    build: ./graphana
+    ports:
+      - "3003:3000"
+
+  mongodb-exporter:
+    image: bitnami/mongodb-exporter:latest
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/mydb
+    ports:
+      - "4004:9216"
+
+  mongodb-exporter-express-photos:
+    image: bitnami/mongodb-exporter:latest
+    environment:
+      - MONGODB_URI=mongodb://mongodb-photos:27017/mydb
+    ports:
+      - "4005:9216"
+
 volumes:
   mongodb_data:
+  prometheus-data:
 

@@ -5,13 +5,23 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 const amqp = require('amqplib');
+const promBundle = require("express-prom-bundle");
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var usersWithPhotosRouter = require('./routes/users-with-photos');
 const { ObjectId } = require('mongodb');
-
 
 const { db } = require("./services/database");
 var app = express();
+
+const metricsMiddleware = promBundle({
+	includePath: true,
+	includeStatusCode: true,
+	normalizePath: true,
+	promClient: {
+		collectDefaultMetrics: {}
+	}
+});
 
 const QUEUE_NAME = process.env.MQ_QUE;
 
@@ -42,8 +52,6 @@ async function consumeMessages() {
 
 async function checkUserExists(userId) {
     try {
-
-
         const user = await db.collection('users').findOne({ _id: new ObjectId(userId) });
 
         return !!user;
@@ -64,8 +72,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(metricsMiddleware);
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/users-with-photos', usersWithPhotosRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

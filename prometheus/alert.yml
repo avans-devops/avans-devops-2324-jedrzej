@@ -1,0 +1,11 @@
+groups:
+  - name: CustomAlerts
+    rules:
+      - alert: "On Express Week 1 down"
+        expr: up{job="express"} < 1
+        for: 30s
+      - alert: "On Express Photos down"
+        expr: up{job="express-photos"} < 1
+        for: 30s
+
+

@@ -4,6 +4,17 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+const promBundle = require("express-prom-bundle");
+const metricsMiddleware = promBundle({
+	includePath: true,
+	includeStatusCode: true,
+	normalizePath: true,
+	promClient: {
+		collectDefaultMetrics: {}
+	}
+});
+
+
 var indexRouter = require('./routes/index');
 var photosRouter = require('./routes/photos');
 
@@ -18,6 +29,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(metricsMiddleware);
 app.use('/', indexRouter);
 app.use('/photos', photosRouter);
 
